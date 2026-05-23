@@ -1,0 +1,37 @@
+# Environnement virtuel
+venv/
+env/
+ENV/
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Fichiers sensibles
+.env
+.env.local
+config.local.py
+
+# Logs
+*.log
+
+# Base de données (si tu en ajoutes)
+*.db
+*.sqlite
+
+# Fichiers temporaires
+*.tmp
+.pytest_cache/
