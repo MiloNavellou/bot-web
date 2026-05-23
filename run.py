@@ -4,6 +4,7 @@ run.py - Point d'entrée du serveur Flask
 C'est LE fichier qu'on exécute pour démarrer le bot.
 """
 
+import os
 from app import create_app
 
 
@@ -18,6 +19,8 @@ if __name__ == '__main__':
     print()
     
     # Lance le serveur
-    # debug=True: redémarre automatiquement quand tu modifies le code
-    # port=5000: le serveur écoute sur le port 5000
-    app.run(debug=True, port=5000)
+    # host='0.0.0.0': accessible de partout
+    # port: Render définit la variable PORT
+    # debug=False: en production, pas de debug
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
