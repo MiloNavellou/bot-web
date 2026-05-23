@@ -10,7 +10,7 @@ from app.games import (
     start_guessing_game, guess_number, start_hangman, guess_letter,
     roll_dice_cmd, roll_custom_cmd, GuessingGame, Hangman
 )
-from app.spotify import search_music, search_artist, get_recommendations_by_genre
+from app.lastfm import search_music, search_artist, get_artist_recommendations, get_recommendations_by_genre
 
 
 # ========== DATA ==========
@@ -175,9 +175,17 @@ def handle_command(command):
     
     elif cmd == '!recommend':
         if not args:
-            return "🎵 Usage: !recommend <genre>\nExemples: pop, rock, hip-hop, jazz, classical, electronic..."
-        genre = ' '.join(args)
-        return get_recommendations_by_genre(genre)
+            return "🎵 Usage: !recommend <artiste ou genre>\nExemples: !recommend The Weeknd  ou  !recommend pop"
+        query = ' '.join(args)
+        
+        # Essayer d'abord comme artiste
+        recommendations = get_artist_recommendations(query)
+        
+        # Si aucune recommandation, essayer comme genre
+        if "Désolé" in recommendations:
+            recommendations = get_recommendations_by_genre(query)
+        
+        return recommendations
     
     else:
         return "🤔 Commande inconnue. Tape !help pour voir les commandes disponibles."

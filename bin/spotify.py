@@ -82,6 +82,10 @@ class SpotifyClient:
     
     def _get_headers(self) -> dict:
         """Retourne les headers pour les requêtes authentifiées"""
+        # Réauthentifier si le token est None ou expiré
+        if not self.access_token:
+            self.authenticate()
+        
         return {
             "Authorization": f"Bearer {self.access_token}",
             "Content-Type": "application/json"
