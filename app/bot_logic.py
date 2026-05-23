@@ -10,6 +10,7 @@ from app.games import (
     start_guessing_game, guess_number, start_hangman, guess_letter,
     roll_dice_cmd, roll_custom_cmd, GuessingGame, Hangman
 )
+from app.spotify import search_music, search_artist, get_recommendations_by_genre
 
 
 # ========== DATA ==========
@@ -140,15 +141,43 @@ def handle_command(command):
     
     elif cmd == '!help':
         help_text = """📚 Commandes disponibles:
+
+🎮 JEUX:
+!guess [nombre] - Deviner un nombre (1-100)
+!hangman [lettre] - Jeu du pendu
+!dice [n] - Lance n dés (1-10)
+!roll [type] - Jet de dé (d20, d100, etc.)
+
+🎵 MUSIQUE:
+!search <chanson> - Cherche une chanson
+!artist <nom> - Cherche un artiste
+!recommend <genre> - Recommandations par genre
+
+🎲 DIVERTISSEMENT:
 !joke - Une blague aléatoire
 !quote - Une citation inspirante
 !8ball - La boule de cristal magique
-!dice [n] - Lance n dés (1-10)
-!roll [type] - Jet de dé (d20, d100, etc.)
-!guess [nombre] - Jeu: deviner un nombre
-!hangman [lettre] - Jeu du pendu
+
 !help - Affiche cette aide"""
         return help_text
+    
+    elif cmd == '!search':
+        if not args:
+            return "🎵 Usage: !search <nom de chanson>"
+        query = ' '.join(args)
+        return search_music(query)
+    
+    elif cmd == '!artist':
+        if not args:
+            return "🎤 Usage: !artist <nom de l'artiste>"
+        query = ' '.join(args)
+        return search_artist(query)
+    
+    elif cmd == '!recommend':
+        if not args:
+            return "🎵 Usage: !recommend <genre>\nExemples: pop, rock, hip-hop, jazz, classical, electronic..."
+        genre = ' '.join(args)
+        return get_recommendations_by_genre(genre)
     
     else:
         return "🤔 Commande inconnue. Tape !help pour voir les commandes disponibles."
