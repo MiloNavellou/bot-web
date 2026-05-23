@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Web - Chat (Swiss Design Animé)</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Swiss Typography & Design System --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        :root {
+            --swiss-red: #167e91;
+            --black-solid: #111111;
+            --gray-dark: #555555;
+            --gray-light: #F0F0F2;
+            --gray-border: #DDDDDF;
+            --white: #FFFFFF;
+            
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+        }
+
+        /* --- FOND ANIMÉ DYNAMIQUE --- */
+        body {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-lg);
+            background-color: #E8E8EB;
+            overflow: hidden;
+            color: var(--black-solid);
+        }
+
+        /* Les orbes de lumière animées (Plus rapides et amples) */
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: 0;
+            animation: floatOrb infinite alternate ease-in-out;
+        }
+
+        .orb-1 {
+            width: 45vw;
+            height: 45vw;
+            background-color: rgba(11, 55, 97, 0.25);
+            top: -10%;
+            left: -10%;
+            animation-duration: 8s;
+        }
+
+        .orb-2 {
+            width: 55vw;
+            height: 55vw;
+            background-color: rgba(17, 17, 17, 0.15);
+            bottom: -20%;
+            right: -10%;
+            animation-duration: 12s;
+            animation-delay: -3s;
+        }
+
+        .orb-3 {
+            width: 35vw;
+            height: 35vw;
+            background-color: rgba(255, 255, 255, 1);
+            top: 40%;
+            left: 20%;
+            animation-duration: 10s;
+            animation-delay: -7s;
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(15%, 25%) scale(1.2); }
+            66% { transform: translate(-15%, 15%) scale(0.8); }
+            100% { transform: translate(25%, -25%) scale(1.1); }
+        }
+
+        /* --- CONTAINER PRINCIPAL --- */
+        .chat-container {
+            width: 100%;
+            max-width: 640px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--black-solid);
+            display: flex;
+            flex-direction: column;
+            height: 720px;
+            position: relative;
+            box-shadow: 20px 20px 0px rgba(17, 17, 17, 0.1);
+            z-index: 10;
+        }
+
+        /* En-tête asymétrique */
+        .chat-header {
+            background-color: transparent;
+            padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-lg) var(--spacing-xl);
+            border-bottom: 1px solid var(--black-solid);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: baseline;
+        }
+
+        .chat-header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.0;
+            text-transform: uppercase;
+        }
+
+        .chat-header p {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--swiss-red);
+        }
+
+        /* Grille des messages */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--spacing-xl);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar { width: 4px; }
+        .chat-messages::-webkit-scrollbar-track { background: transparent; }
+        .chat-messages::-webkit-scrollbar-thumb { background: var(--black-solid); }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            max-width: 85%;
+            animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.bot { align-self: flex-start; }
+        .message.user { align-self: flex-end; text-align: right; }
+
+        .message-avatar {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray-dark);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .message.user .message-avatar {
+            justify-content: flex-end;
+            color: var(--swiss-red);
+        }
+
+        .message-content {
+            font-size: 14px;
+            line-height: 1.5;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            padding: var(--spacing-md) var(--spacing-lg);
+            word-wrap: break-word;
+            text-align: left;
+        }
+
+        .message.bot .message-content {
+            background: var(--gray-light);
+            color: var(--black-solid);
+            border-left: 3px solid var(--black-solid);
+        }
+
+        .message.user .message-content {
+            background: var(--black-solid);
+            color: var(--white);
+        }
+
+        .commands-hint {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--gray-dark);
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: transparent;
+            border-top: 1px solid var(--gray-border);
+            letter-spacing: -0.01em;
+        }
+
+        .chat-input-area {
+            padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-xl) var(--spacing-xl);
+            background: transparent;
+            border-top: 1px solid var(--black-solid);
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: var(--spacing-md);
+            border: 1px solid var(--gray-border);
+            border-radius: 0;
+            font-size: 14px;
+            font-weight: 400;
+            background: rgba(255,255,255,0.8);
+            color: var(--black-solid);
+            transition: border-color 0.15s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--black-solid);
+        }
+
+        button {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: var(--black-solid);
+            color: var(--white);
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: background-color 0.15s ease;
+        }
+
+        button:hover { background-color: var(--swiss-red); }
+        button:active { background-color: var(--black-solid); }
+
+        .loading {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            padding: 4px 0;
+        }
+
+        .loading span {
+            width: 6px;
+            height: 6px;
+            background-color: var(--black-solid);
+            border-radius: 0;
+            animation: swissPulse 0.8s infinite ease-in-out;
+        }
+
+        .loading span:nth-child(2) { animation-delay: 0.15s; }
+        .loading span:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes swissPulse {
+            0%, 100% { opacity: 0.2; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); background-color: var(--swiss-red); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Éléments de lumière en arrière-plan avec animations accélérées -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>JARV1S</h1>
+            <p>Index / P-03</p>
+        </div>
+
+        <div class="chat-messages" id="messages">
+            <div class="message bot">
+                <div class="message-avatar">SYSTEM / SYSTEME</div>
+                <div class="message-content">Salut! Je suis ton bot! 👋 Essaie de m'écrire quelque chose ou tape une commande (commence par !).</div>
+            </div>
+        </div>
+
+        <div class="commands-hint">
+            Instructions disponibles : !joke, !quote, !8ball, !help
+        </div>
+
+        <div class="chat-input-area">
+            <input 
+                type="text" 
+                id="messageInput" 
+                placeholder="Entrez votre message..."
+                autocomplete="off"
+            >
+            <button onclick="sendMessage()">Envoyer</button>
+        </div>
+    </div>
+
+    <script>
+        const messagesDiv = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+
+        function scrollToBottom() {
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = isUser ? 'USER / UTILISATEUR' : 'BOT / REPONSE';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = content;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(contentDiv);
+            messagesDiv.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function addLoadingMessage() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = 'PROCESS / EN COURS';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = '<div class="loading"><span></span><span></span><span></span></div>';
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(contentDiv);
+            messagesDiv.appendChild(messageDiv);
+            scrollToBottom();
+            
+            return messageDiv;
+        }
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            
+            if (!message) return;
+            
+            addMessage(message, true);
+            messageInput.value = '';
+            
+            const loadingMsg = addLoadingMessage();
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                const data = await response.json();
+                
+                loadingMsg.remove();
+                addMessage(data.response, false);
+                
+            } catch (error) {
+                loadingMsg.remove();
+                addMessage('Connexion au serveur non détectée (Simulation de réponse locale).', false);
+                console.error('Erreur:', error);
+            }
+        }
+
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        messageInput.focus();
+    </script>
+</body>
+</html>
